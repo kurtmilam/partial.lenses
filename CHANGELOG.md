@@ -1,5 +1,13 @@
 # Changelog
 
+## 12.0.0
+
+`L.forEach` was optimized.
+
+Support for lazy algebras (folds) was removed.
+
+`L.cache` was removed.
+
 ## 11.17.0
 
 Fixed a bug in `L.countIf`.  Previously it didn't pass the index to the
