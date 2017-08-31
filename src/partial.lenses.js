@@ -4,8 +4,6 @@ import * as C from "./contract"
 
 //
 
-const pipeO = (f, g) => f ? I.pipe2U(f, g) : g
-
 const toStringPartial = x => void 0 !== x ? String(x) : ""
 
 const lt = (x, y) => x < y
@@ -854,10 +852,20 @@ export const maximumBy = /*#__PURE__*/mumBy(gt)
 
 export const maximum = /*#__PURE__*/traverse(Mum(gt), I.id)
 
-export const meanAs = /*#__PURE__*/I.curry((xi2y, t, s) =>
-  sumAs(pipeO(xi2y, unto0), t, s) / sumAs(pipeO(xi2y, I.isDefined), t, s))
+export const meanAs = /*#__PURE__*/I.curry((xi2y, t, s) => {
+  let sum = 0
+  let num = 0
+  traverseU(Select, (x, i) => {
+    const y = xi2y(x, i)
+    if (void 0 !== y) {
+      num += 1
+      sum += y
+    }
+  }, t, s)
+  return sum / num
+})
 
-export const mean = /*#__PURE__*/meanAs()
+export const mean = /*#__PURE__*/meanAs(I.id)
 
 export const minimumBy = /*#__PURE__*/mumBy(lt)
 
