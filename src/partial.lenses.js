@@ -14,7 +14,6 @@ const gt = (x, y) => x > y
 const sliceIndex = (m, l, d, i) =>
   void 0 !== i ? Math.min(Math.max(m, i < 0 ? l + i : i), l) : d
 
-function pair(x0, x1) {return [x0, x1]}
 const cpair = xs => x => [x, xs]
 
 const unto = c => x => void 0 !== x ? x : c
@@ -93,14 +92,16 @@ const Sum = /*#__PURE__*/ConcatOf((x, y) => x + y, 0)
 const Mum = ord =>
   ConcatOf((y, x) => void 0 !== x && (void 0 === y || ord(x, y)) ? x : y)
 
-const MumBy = ord => keyOf => ConcatOf((y, x) => {
-  const xk = x && keyOf(x[0], x[1])
-  if (void 0 === xk)
-    return y
-  const yk = y && keyOf(y[0], y[1])
-  if (void 0 === yk)
-    return x
-  return ord(xk, yk) ? x : y
+const mumBy = ord => I.curry((xi2y, t, s) => {
+  let minX = void 0, minY = void 0
+  traverseU(Select, (x, i) => {
+    const y = xi2y(x, i)
+    if (void 0 !== y && (void 0 === minY || ord(y, minY))) {
+      minX = x
+      minY = y
+    }
+  }, t, s)
+  return minX
 })
 
 //
@@ -849,7 +850,7 @@ export const joinAs = /*#__PURE__*/mkTraverse(toStringPartial, (process.env.NODE
 
 export const join = /*#__PURE__*/joinAs(I.id)
 
-export const maximumBy = /*#__PURE__*/mkTraverse(reValue, MumBy(gt))(pair)
+export const maximumBy = /*#__PURE__*/mumBy(gt)
 
 export const maximum = /*#__PURE__*/traverse(Mum(gt), I.id)
 
@@ -858,7 +859,7 @@ export const meanAs = /*#__PURE__*/I.curry((xi2y, t, s) =>
 
 export const mean = /*#__PURE__*/meanAs()
 
-export const minimumBy = /*#__PURE__*/mkTraverse(reValue, MumBy(lt))(pair)
+export const minimumBy = /*#__PURE__*/mumBy(lt)
 
 export const minimum = /*#__PURE__*/traverse(Mum(lt), I.id)
 
