@@ -985,29 +985,29 @@ describe("lazy folds", () => {
         [41])
   testEq(`{ let n = 0
           ; const v =
-              L.selectAs(x => { n += 1; return x === 42 ? x : undefined },
-                         L.elems,
+              X.selectAs(x => { n += 1; return x === 42 ? x : undefined },
+                         X.elems,
                          [1, 3, 42, 56, 32])
           ; return [n, v] }`,
          [3, 42])
   testEq(`{ let n = 0
           ; const v =
-              L.selectAs(x => { n += 1; return x === 42 ? x : undefined },
-                         L.values,
+              X.selectAs(x => { n += 1; return x === 42 ? x : undefined },
+                         X.values,
                          {x: 1, y: 42, z: 25})
           ; return [n, v] }`,
          [2, 42])
   testEq(`{ let n = 0
           ; const v =
-              L.selectAs(x => { n += 1; return x === 42 ? x : undefined },
-                         L.branch({x: [], y: 0, z: []}),
+              X.selectAs(x => { n += 1; return x === 42 ? x : undefined },
+                         X.branch({x: [], y: 0, z: []}),
                          {x: 5, z: 5, y: [42]})
           ; return [n, v] }`,
          [2, 42])
   testEq(`{ let n = 0
           ; const v =
-              L.selectAs(x => { n += 1; return x === 'ba' ? x : undefined },
-                         L.matches(/[ab]+/g),
+              X.selectAs(x => { n += 1; return x === 'ba' ? x : undefined },
+                         X.matches(/[ab]+/g),
                          "Ab-ba CD b")
           ; return [n, v] }`,
          [2, 'ba'])
