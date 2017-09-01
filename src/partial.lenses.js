@@ -476,18 +476,28 @@ const branchOnMerge = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.id
 })
 
 const branchOn = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.id : C.dep(([_keys, vals]) => C.res(C.par(2, C.ef(reqApplicative(vals ? "branch" : "values"))))))((keys, vals) => (x, _i, A, xi2yA) => {
-  const {map, ap, of} = A
+  const {of} = A
   let n = keys.length
   if (!n)
     return of(object0ToUndefined(x))
   if (!(x instanceof Object))
     x = I.object0
-  let xsA = of(cpair)
-  for (let i=0; i<n; ++i) {
-    const k = keys[i], v = x[k]
-    xsA = ap(map(cpair, xsA), vals ? vals[i](v, k, A, xi2yA) : xi2yA(v, k))
+  if (Select === A) {
+    for (let i=0; i<n; ++i) {
+      const k = keys[i], v = x[k]
+      const y = vals ? vals[i](v, k, A, xi2yA) : xi2yA(v, k)
+      if (void 0 !== y)
+        return y
+    }
+  } else {
+    const {map, ap} = A
+    let xsA = of(cpair)
+    for (let i=0; i<n; ++i) {
+      const k = keys[i], v = x[k]
+      xsA = ap(map(cpair, xsA), vals ? vals[i](v, k, A, xi2yA) : xi2yA(v, k))
+    }
+    return map(branchOnMerge(x, keys), xsA)
   }
-  return map(branchOnMerge(x, keys), xsA)
 })
 
 const replaced = (inn, out, x) => I.acyclicEqualsU(x, inn) ? out : x
@@ -558,6 +568,14 @@ const iterToArray = xs => {
     xs = xs[2]
   }
   return ys
+}
+
+function iterSelect(xi2y, t, s) {
+  while ((s = reNext(s, t))) {
+    const y = xi2y(reValue(s), reIndex(s))
+    if (void 0 !== y)
+      return y
+  }
 }
 
 function iterEager(map, ap, of, xi2yA, t, s) {
@@ -754,8 +772,8 @@ export const flatten =
 
 export const values = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.id : C.par(2, C.ef(reqApplicative("values"))))((xs, _i, A, xi2yA) => {
   if (xs instanceof Object) {
-    return A === Ident ? mapPartialObjectU(xi2yA, toObject(xs))
-      :                  branchOn(I.keys(xs), void 0)(xs, void 0, A, xi2yA)
+    return A === Ident  ? mapPartialObjectU(xi2yA, toObject(xs))
+      :                   branchOn(I.keys(xs), void 0)(xs, void 0, A, xi2yA)
   } else {
     return A.of(xs)
   }
@@ -769,8 +787,12 @@ export const matches = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.i
         const m0 = [""]
         m0.input = x
         m0.index = 0
-        const {ap, of} = C
-        return map(matchesJoin(x), iterEager(map, ap, of, xi2yC, re, m0))
+        if (Select === C) {
+          return iterSelect(xi2yC, re, m0)
+        } else {
+          const {ap, of} = C
+          return map(matchesJoin(x), iterEager(map, ap, of, xi2yC, re, m0))
+        }
       } else {
         const m = x.match(re)
         if (m)
