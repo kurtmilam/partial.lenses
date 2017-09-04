@@ -502,31 +502,23 @@ const branchOn = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.id : C.
 
 const replaced = (inn, out, x) => I.acyclicEqualsU(x, inn) ? out : x
 
-function findIndex(xi2b, xs) {
-  const n = xs.length
-  for (let i=0; i<n; ++i)
-    if (xi2b(xs[i], i))
-      return i
-  return n
-}
-
 function findIndexHint(hint, xi2b, xs) {
-  const n = xs.length
   let u = hint.hint
+  const n = xs.length
   if (n <= u) u = n-1
   if (u < 0) u = 0
   let d = u-1
   for (; 0 <= d && u < n; ++u, --d) {
-    if (xi2b(xs[u], hint))
+    if (xi2b(xs[u], u, hint))
       return u
-    if (xi2b(xs[d], hint))
+    if (xi2b(xs[d], d, hint))
       return d
   }
   for (; u < n; ++u)
-    if (xi2b(xs[u], hint))
+    if (xi2b(xs[u], u, hint))
       return u
   for (; 0 <= d; --d)
-    if (xi2b(xs[d], hint))
+    if (xi2b(xs[d], d, hint))
       return d
   return n
 }
@@ -1002,19 +994,14 @@ export const filter = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.id
     xi2yF(ts, i))
 })
 
-export const find = xi2b => (xs, _i, F, xi2yF) => {
-  const ys = seemsArrayLike(xs) ? xs : "",
-        i = findIndex(xi2b, ys)
-  return F.map(v => setIndex(i, v, ys), xi2yF(ys[i], i))
-}
-
-export const findHint = /*#__PURE__*/I.curry((xh2b, hint) => {
+export function find(xih2b) {
+  const hint = arguments.length > 1 ? arguments[1] : {hint: 0}
   return (xs, _i, F, xi2yF) => {
     const ys = seemsArrayLike(xs) ? xs : "",
-          i = hint.hint = findIndexHint(hint, xh2b, ys)
+          i = hint.hint = findIndexHint(hint, xih2b, ys)
     return F.map(v => setIndex(i, v, ys), xi2yF(ys[i], i))
   }
-})
+}
 
 export function findWith(...os) {
   const oos = toFunction(compose(...os))

@@ -8,6 +8,8 @@ Support for lazy algebras (folds) was removed.
 
 `L.cache` was removed.
 
+`L.findHint` was merged into `L.hint`.
+
 ## 11.17.0
 
 Fixed a bug in `L.countIf`.  Previously it didn't pass the index to the

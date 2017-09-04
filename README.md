@@ -125,8 +125,7 @@ parts.  [Try Lenses!](https://calmm-js.github.io/partial.lenses/playground.html)
     * [Lensing array-like objects](#array-like)
       * [`L.append ~> lens`](#L-append "L.append: PLens [a] a") <small><sup>v1.0.0</sup></small>
       * [`L.filter((maybeValue, index) => testable) ~> lens`](#L-filter "L.filter: ((Maybe a, Index) -> Boolean) -> PLens [a] [a]") <small><sup>v1.0.0</sup></small>
-      * [`L.find((maybeValue, index) => testable) ~> lens`](#L-find "L.find: ((Maybe a, Index) -> Boolean) -> PLens [a] a") <small><sup>v1.0.0</sup></small>
-      * [`L.findHint((maybeValue, {hint: index}) => testable, {hint: index}) ~> lens`](#L-findHint "L.findHint: ((Maybe a, {hint: Index}) -> Boolean, {hint: Index}) -> PLens [a] a") <small><sup>v10.1.0</sup></small>
+      * [`L.find((maybeValue, index, {hint: index}) => testable[, {hint: index}]) ~> lens`](#L-find "L.find: ((Maybe a, Index, {hint: Index}) -> Boolean[, {hint: Index}]) -> PLens [a] a") <small><sup>v1.0.0</sup></small>
       * [`L.findWith(...optics) ~> optic`](#L-findWith "L.findWith: (POptic s s1, ...POptic sN a) -> POptic [s] a") <small><sup>v1.0.0</sup></small>
       * [`L.index(elemIndex) ~> lens`](#L-index "L.index: Integer -> PLens [a] a") or `elemIndex` <small><sup>v1.0.0</sup></small>
       * [`L.last ~> lens`](#L-last "L.last: PLens [a] a") <small><sup>v9.8.0</sup></small>
@@ -2442,24 +2441,15 @@ L.remove(L.find(x => x <= 2), [3,1,4,1,5,9,2])
 // [ 3, 4, 1, 5, 9, 2 ]
 ```
 
-Note that `L.find` by itself does not satisfy all lens laws.  To fix this, you
-can e.g. post compose `L.find` with lenses that ensure that the property being
-tested by the predicate given to `L.find` cannot be written to.  See
-[here](#myth-partial-lenses-are-not-lawful) for discussion and an example.
-
-##### <a id="L-findHint"></a> [≡](#contents) [▶](https://calmm-js.github.io/partial.lenses/#L-findHint) [`L.findHint((maybeValue, {hint: index}) => testable, {hint: index}) ~> lens`](#L-findHint "L.findHint: ((Maybe a, {hint: Index}) -> Boolean, {hint: Index}) -> PLens [a] a") <small><sup>v10.1.0</sup></small>
-
-`L.findHint` is much like [`L.find`](#L-find) and determines the index of
-an [array-like](#array-like) object to operate on by searching with the given
-predicate.  Unlike [`L.find`](#L-find), `L.findHint` is designed to operate
-efficiently when used repeatedly on uniquely identifiable targets, such as
-objects with unique `id`s.  To this end, `L.findHint` is given an object with a
-`hint` property.  The search is started from the closest existing index to the
-`hint` and then by increasing distance from that index.  The `hint` is updated
-after each search and the `hint` can also be mutated from the outside.  The
-`hint` object is also passed to the predicate as the second argument.  This
-makes it possible to both practically eliminate the linear search and to
-implement the predicate without allocating extra memory for it.
+`L.find` is designed to operate efficiently when used repeatedly.  To this end,
+`L.find` can be given an object with a `hint` property and when no hint object
+is passed, a new object will be allocated internally.  Repeated searches are
+started from the closest existing index to the `hint` and then by increasing
+distance from that index.  The `hint` is updated after each search and the
+`hint` can also be mutated from the outside.  The `hint` object is also passed
+to the predicate as the third argument.  This makes it possible to both
+practically eliminate the linear search and to implement the predicate without
+allocating extra memory for it.
 
 For example:
 
@@ -2477,6 +2467,11 @@ L.modify([L.findHint(R.whereEq({id: 2}), {hint: 2}), "value"],
 //  {id: 4, value: "d"},
 //  {id: 5, value: "e"}]
 ```
+
+Note that `L.find` by itself does not satisfy all lens laws.  To fix this, you
+can e.g. post compose `L.find` with lenses that ensure that the property being
+tested by the predicate given to `L.find` cannot be written to.  See
+[here](#myth-partial-lenses-are-not-lawful) for discussion and an example.
 
 ##### <a id="L-findWith"></a> [≡](#contents) [▶](https://calmm-js.github.io/partial.lenses/#L-findWith) [`L.findWith(...optics) ~> optic`](#L-findWith "L.findWith: (POptic s s1, ...POptic sN a) -> POptic [s] a") <small><sup>v1.0.0</sup></small>
 
