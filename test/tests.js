@@ -209,7 +209,6 @@ describe("arities", () => {
     elems: 4,
     filter: 1,
     find: 1,
-    findHint: 2,
     findWith: 0,
     flatten: 4,
     foldTraversalLens: 2,
@@ -289,31 +288,28 @@ describe("arities", () => {
 })
 
 describe(`L.find`, () => {
-  testEq(`L.set(L.find(R.equals(2)), undefined, [2])`, undefined)
-  testEq(`L.set(L.find(R.equals(2)))(undefined, [1, 2, 3])`, [1, 3])
-  testEq(`L.set(L.find(R.equals(2)))(4)([1, 2, 3])`, [1, 4, 3])
-  testEq(`L.set(L.find(R.equals(2)), 2)([1, 4, 3])`, [1, 4, 3, 2])
-  testEq(`L.set(L.find(R.equals(2)), 2, undefined)`, [2])
-  testEq(`L.set(L.find(R.equals(2)), 2, [])`, [2])
-  testEq(`L.get(L.find(R.equals(2)), undefined)`, undefined)
-  testEq(`L.get(L.find(R.equals(2)), [3])`, undefined)
-  testEq(`L.remove([L.rewrite(R.join("")), L.find(R.equals("A"))], "LOLA")`,
+  testEq(`L.set(X.find(R.equals(2)), undefined, [2])`, undefined)
+  testEq(`L.set(X.find(R.equals(2)))(undefined, [1, 2, 3])`, [1, 3])
+  testEq(`L.set(X.find(R.equals(2)))(4)([1, 2, 3])`, [1, 4, 3])
+  testEq(`L.set(X.find(R.equals(2)), 2)([1, 4, 3])`, [1, 4, 3, 2])
+  testEq(`L.set(X.find(R.equals(2)), 2, undefined)`, [2])
+  testEq(`L.set(X.find(R.equals(2)), 2, [])`, [2])
+  testEq(`L.get(X.find(R.equals(2)), undefined)`, undefined)
+  testEq(`L.get(X.find(R.equals(2)), [3])`, undefined)
+  testEq(`L.remove([L.rewrite(R.join("")), X.find(R.equals("A"))], "LOLA")`,
          "LOL")
-  testEq(`L.set([L.rewrite(R.join("")), L.find(R.equals("O"))], "A-", "LOLA")`,
+  testEq(`L.set([L.rewrite(R.join("")), X.find(R.equals("O"))], "A-", "LOLA")`,
          "LA-LA")
-})
 
-describe(`L.findHint`, () => {
-  testEq(`L.get(L.findHint(R.equals(1), {hint: 2}), [2,2,2,1,2])`, 1)
-  testEq(`L.get(L.findHint(R.equals(1), {hint: 0}), [2,2,2,1,2])`, 1)
-  testEq(`L.get(L.findHint(R.equals(1), {hint: 4}), [2,1,2,2,2])`, 1)
-  testEq(`L.get(L.findHint(R.equals(1), {hint: 5}), 0)`, undefined)
-  testEq(`L.get(L.findHint(R.pipe(Math.abs, R.equals(2)),
-                           {hint: 2}),
+  testEq(`L.get(L.find(R.equals(1), {hint: 2}), [2,2,2,1,2])`, 1)
+  testEq(`L.get(L.find(R.equals(1), {hint: 0}), [2,2,2,1,2])`, 1)
+  testEq(`L.get(L.find(R.equals(1), {hint: 4}), [2,1,2,2,2])`, 1)
+  testEq(`L.get(L.find(R.equals(1), {hint: 5}), 0)`, undefined)
+  testEq(`L.get(L.find(R.pipe(Math.abs, R.equals(2)), {hint: 2}),
                 [-1,-2,3,1,2,1])`,
          -2)
-  testEq(`L.get(L.findHint(R.equals(2), {hint: 10}), [3,2,1,0])`, 2)
-  testEq(`L.set(L.findHint(R.equals(2), {hint: 0}), 2, [0,1])`, [0,1,2])
+  testEq(`L.get(L.find(R.equals(2), {hint: 10}), [3,2,1,0])`, 2)
+  testEq(`L.set(L.find(R.equals(2), {hint: 0}), 2, [0,1])`, [0,1,2])
 })
 
 describe(`L.get`, () => {
