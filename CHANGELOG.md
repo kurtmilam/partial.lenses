@@ -2,13 +2,15 @@
 
 ## 12.0.0
 
-`L.forEach` was optimized.
-
-Support for lazy algebras (folds) was removed.
-
 `L.cache` was removed.
 
+`L.augment` was removed.
+
 `L.findHint` was merged into `L.hint`.
+
+Support for lazy algebras with the `delay` function was removed.
+
+`L.forEach` was optimized.
 
 ## 11.17.0
 

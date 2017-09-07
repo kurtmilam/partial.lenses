@@ -920,35 +920,6 @@ export const setter = /*#__PURE__*/lens(I.id)
 export const foldTraversalLens = /*#__PURE__*/I.curry((fold, traversal) =>
   lensU(fold(traversal), set(traversal)))
 
-// Computing derived props
-
-export const augment = /*#__PURE__*/(process.env.NODE_ENV === "production" ? I.id : C.fn(C.nth(0, C.ef(reqTemplate("augment"))), lens => toFunction([isoU(I.id, freeze), lens, isoU(freeze, C.ef(reqObject("`augment` must be set with undefined or an object")))])))(template => lensU(x => {
-  x = I.dissocPartialU(0, x)
-  if (x)
-    for (const k in template)
-      x[k] = template[k](x)
-  return x
-}, (y, x) => {
-  y = toObject(y)
-  if (!(x instanceof Object))
-    x = void 0
-  let z
-  for (const k in y) {
-    if (!I.hasU(k, template)) {
-      if (!z)
-        z = {}
-      z[k] = y[k]
-    } else {
-      if (x && I.hasU(k, x)) {
-        if (!z)
-          z = {}
-        z[k] = x[k]
-      }
-    }
-  }
-  return z
-}))
-
 // Enforcing invariants
 
 export function defaults(out) {

@@ -190,7 +190,6 @@ describe("arities", () => {
     array: 1,
     assign: 3,
     assignOp: 1,
-    augment: 1,
     branch: 1,
     chain: 2,
     choice: 0,
@@ -570,30 +569,6 @@ describe("L.append", () => {
     testEq(`L.set(L.append, "a", ${show(invalid)})`, ["a"])
   })
   testEq(`L.set(L.append, 1, Int8Array.of(3,1,4))`, [3,1,4,1])
-})
-
-describe("L.augment", () => {
-  testEq(`L.get(L.augment({y: c => c.x+1, z: c => c.x-1}), {x: 0})`,
-         {x: 0, y: 1, z: -1})
-  testEq(`L.get(L.augment({y: c => c.x+1}), {x: 2, y: -1})`, {x: 2, y: 3})
-  testEq(`L.set(L.augment({y: c => c.x+1}), {x: 1, y: 1}, {x: 0})`, {x: 1})
-  testEq(`L.set(L.augment({y: c => c.x+1}), {x: 2, y: 1}, {x: 0, y: -1})`,
-         {x: 2, y: -1})
-  testEq(`L.get(L.augment({y: c => c.x+1, z: c => c.y+1}), {x: 1})`,
-         {x: 1, y: 2, z: 3})
-  testEq(`L.remove([L.augment({y: () => 1}), "x"], {x:0})`, undefined)
-  testEq(`L.remove(L.augment({z: c => c.x + c.y}), {x: 1, y: 2})`, undefined)
-  testEq(`L.set(L.augment({z: c => c.x + c.y}), new XYZ(3,2,1), {x: 1, y: 2})`,
-         {x: 3, y: 2})
-  testEq(`L.set(L.augment({x: () => 1}), {constructor: 1}, {})`,
-         {constructor: 1})
-  testEq(`L.set(L.augment({x: () => 2}), {x: 3}, {x: 1})`, {x: 1})
-  testEq(`L.set([L.augment({constructor: () => 1}), "x"], 2, {x: 1})`, {x: 2})
-  testEq(`L.set(L.augment({x: () => 1}), {x: 2}, undefined)`, undefined)
-  empties.forEach(invalid => {
-    testEq(`L.get(L.augment({x: () => 1}), ${show(invalid)})`, undefined)
-    testEq(`L.set(L.augment({x: () => 1}), {y: 2}, ${show(invalid)})`, {y: 2})
-  })
 })
 
 describe("L.elems", () => {
@@ -1182,8 +1157,6 @@ if (process.env.NODE_ENV !== "production") {
     testThrows(`L.set(L.slice(undefined, undefined), 11, [])`)
     testThrows(`L.pick(new XYZ(1,2,3))`)
     testThrows(`L.set(L.filter(undefined, undefined), {x: 11}, [])`)
-    testThrows(`L.augment(new XYZ(1,2,3))`)
-    testThrows(`L.set(L.augment({y: () => 1}), 45, {x: 1})`)
 
     testThrows(`L.set(null, 1, 2)`)
 

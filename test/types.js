@@ -246,10 +246,6 @@ export const foldTraversalLens =
         T_traversal],
        T_lens)
 
-// Computing derived props
-
-export const augment = T.fn([T.props(T.fn([T.any], T_maybeDataI))], T_lens)
-
 // Enforcing invariants
 
 export const defaults = T.fn([T_dataI], T_lens)

@@ -114,8 +114,6 @@ parts.  [Try Lenses!](https://calmm-js.github.io/partial.lenses/playground.html)
       * [`L.lens((maybeData, index) => maybeValue, (maybeValue, maybeData, index) => maybeData) ~> lens`](#L-lens "L.lens: ((Maybe s, Index) -> Maybe a) -> ((Maybe a, Maybe s, Index) -> Maybe s) -> PLens s a") <small><sup>v1.0.0</sup></small>
       * [`L.setter((maybeValue, maybeData, index) => maybeData) ~> lens`](#L-setter "L.setter: ((Maybe a, Maybe s, Index) -> Maybe s) -> PLens s a") <small><sup>v10.3.0</sup></small>
       * [`L.foldTraversalLens((traversal, maybeData) ~> maybeValue, traversal) ~> lens`](#L-foldTraversalLens "L.foldTraversalLens: (PTraversal s a -> Maybe s -> Maybe a) -> PTraversal s a -> PLens s a") <small><sup>v11.5.0</sup></small>
-    * [Computing derived props](#computing-derived-props)
-      * [`L.augment({prop: object => value, ...props}) ~> lens`](#L-augment "L.augment: {p1: o -> a1, ...ps} -> PLens {...o} {...o, p1: a1, ...ps}") <small><sup>v1.1.0</sup></small>
     * [Enforcing invariants](#enforcing-invariants)
       * [`L.defaults(valueIn) ~> lens`](#L-defaults "L.defaults: s -> PLens s s") <small><sup>v2.0.0</sup></small>
       * [`L.define(value) ~> lens`](#L-define "L.define: s -> PLens s s") <small><sup>v1.0.0</sup></small>
@@ -2233,24 +2231,6 @@ L.set(L.foldTraversalLens(L.minimum, L.elems), 2, [3,1,4])
 
 See the [Collection toggle](#collection-toggle) section for a more interesting
 example.
-
-#### Computing derived props
-
-##### <a id="L-augment"></a> [≡](#contents) [▶](https://calmm-js.github.io/partial.lenses/#L-augment) [`L.augment({prop: object => value, ...props}) ~> lens`](#L-augment "L.augment: {p1: o -> a1, ...ps} -> PLens {...o} {...o, p1: a1, ...ps}") <small><sup>v1.1.0</sup></small>
-
-`L.augment` is given a template of functions to compute new properties.  When
-not viewing or setting a defined object, the result is `undefined`.  When
-viewing a defined object, the object is extended with the computed properties.
-When set with a defined object, the extended properties are removed.
-
-For example:
-
-```js
-L.modify(L.augment({y: r => r.x + 1}),
-         r => ({x: r.x + r.y, y: 2, z: r.x - r.y}),
-         {x: 1})
-// { x: 3, z: -1 }
-```
 
 #### Enforcing invariants
 
